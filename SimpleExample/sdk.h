@@ -95,12 +95,12 @@
 
 #include "public\\bspfile.h"
 #include "public\\gamebspfile.h"
-#pragma comment(lib, "hl2sdk-csgo\\lib\\public\\tier0.lib")
-#pragma comment(lib, "hl2sdk-csgo\\lib\\public\\tier1.lib")
-#pragma comment(lib, "hl2sdk-csgo\\lib\\public\\tier2.lib")
-#pragma comment(lib, "hl2sdk-csgo\\lib\\public\\tier3.lib")
-#pragma comment(lib, "hl2sdk-csgo\\lib\\public\\mathlib.lib")
-#pragma comment(lib, "hl2sdk-csgo\\lib\\public\\vstdlib.lib")
+#pragma comment(lib, "public\\tier0.lib")
+#pragma comment(lib, "public\\tier1.lib")
+#pragma comment(lib, "public\\tier2.lib")
+#pragma comment(lib, "public\\tier3.lib")
+#pragma comment(lib, "public\\mathlib.lib")
+#pragma comment(lib, "public\\vstdlib.lib")
 
 #ifndef DEBUG_ENABLED
 #define DEBUG_ENABLED

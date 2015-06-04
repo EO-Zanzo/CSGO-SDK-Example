@@ -42,7 +42,7 @@ CreateInterfaceFn StudioRenderFactory = NULL;
 CreateInterfaceFn InputSystemFactory = NULL;
 CreateInterfaceFn FileSysFactory = NULL;
 
-bool name;
+bool name = true;
 int screenWidth, screenHeight;
 
 void SpitShit();
@@ -100,6 +100,7 @@ void __fastcall hkPaintTraverse(void* ecx, void* edx, unsigned int vguiPanel, bo
 
 	if (MatSystemTopPanel == vguiPanel)
 	{
+		DrawString( 10, 10, Color::Red(), s_HFontPlayer, "Hello froasfm PaintTraverse" );
 		if (GetAsyncKeyState(VK_F9) & 1)
 		{
 			name = !name;
@@ -125,7 +126,9 @@ void __fastcall hkPaintTraverse(void* ecx, void* edx, unsigned int vguiPanel, bo
 				C_BaseEntity* pBaseEntity = (C_BaseEntity*)entitylist->GetClientEntity(i);
 				if (!pBaseEntity)
 					continue;
-				if (pBaseEntity->health() < 1)
+				if( pBaseEntity->health() < 1 )
+					continue;
+				if( pBaseEntity->IsDormant() )
 					continue;
 				if (pBaseEntity == pLocalEntity)
 					continue;
@@ -139,9 +142,13 @@ void __fastcall hkPaintTraverse(void* ecx, void* edx, unsigned int vguiPanel, bo
 					{
 						if (name)
 						{
-							player_info_t info;
-							engine->GetPlayerInfo(i, &info);
-							DrawString(out.x - 5, out.y, Color::Red(), s_HFontPlayer, info.name);
+							//g_pCVar->ConsoleColorPrintf( Color::Purple(), (std::to_string( out.x ) + " - "+ std::to_string( out.y )).c_str() );
+							//player_info_t info;
+							//engine->GetPlayerInfo(i, &info);
+
+							//DrawString(out.x - 5, out.y, Color::Red(), s_HFontPlayer, info.name);
+							g_pMatSurface->DrawSetColor( Color::Purple() );
+							g_pMatSurface->DrawFilledRect(out.x, out.y, out.x + 10, out.y + 10 );
 						}
 					}
 				}

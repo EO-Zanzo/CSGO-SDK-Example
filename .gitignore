@@ -20,7 +20,6 @@ Thumbs.db
 *.ipch
 [Bb]in
 [Dd]ebug*/
-*.lib
 *.sbr
 obj/
 [Rr]elease*/
@@ -28,5 +27,5 @@ _ReSharper*/
 [Tt]est[Rr]esult*
 *.vssscc
 $tf*/
-csgoexample.opensdf
-csgoexample.sdf
+*.opensdf
+*.sdf
