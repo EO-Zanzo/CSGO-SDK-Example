@@ -12,7 +12,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectName>tier1</ProjectName>
-    <ProjectGuid>{E1DA8DB8-FB4C-4B14-91A6-98BCED6B9720}</ProjectGuid>
+    <ProjectGuid>{FB71A079-5920-4340-AF46-0CE1EA1FDC96}</ProjectGuid>
     <RootNamespace>tier1</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

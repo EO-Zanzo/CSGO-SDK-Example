@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "interfaces", "CSGO-SDK\inte
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SimpleExample.", "SimpleExample\SimpleExample..vcxproj", "{EB788B10-6BA3-43F8-B3C4-10832F2C4BC7}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tier1", "CSGO-SDK\tier1\tier1.vcxproj", "{FB71A079-5920-4340-AF46-0CE1EA1FDC96}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -21,6 +23,10 @@ Global
 		{EB788B10-6BA3-43F8-B3C4-10832F2C4BC7}.Debug|Win32.Build.0 = Debug|Win32
 		{EB788B10-6BA3-43F8-B3C4-10832F2C4BC7}.Release|Win32.ActiveCfg = Release|Win32
 		{EB788B10-6BA3-43F8-B3C4-10832F2C4BC7}.Release|Win32.Build.0 = Release|Win32
+		{FB71A079-5920-4340-AF46-0CE1EA1FDC96}.Debug|Win32.ActiveCfg = Debug|Win32
+		{FB71A079-5920-4340-AF46-0CE1EA1FDC96}.Debug|Win32.Build.0 = Debug|Win32
+		{FB71A079-5920-4340-AF46-0CE1EA1FDC96}.Release|Win32.ActiveCfg = Release|Win32
+		{FB71A079-5920-4340-AF46-0CE1EA1FDC96}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
