@@ -20,15 +20,15 @@ CGlobalVars* g_pGlobals;
 DWORD g_dwGameResources = NULL;
 ClientModeShared* g_pClientMode;
 IMatSystemSurface* g_pMatSurface;
-CGlowObjectManager* g_pGlowObjectManager = NULL;
+CGlowObjectManager* g_pGlowObjectManager;
 
-CVMTHookManager* pEngineHook;
+//CVMTHookManager* pEngineHook;
 CVMTHookManager* pPanelHook;
-CVMTHookManager* pSurfaceHook;
-CVMTHookManager* pClientHook;
-CVMTHookManager* pClientModeHook;
-CVMTHookManager* pModelRenderHook;
-CVMTHookManager* pInputHook;
+//CVMTHookManager* pSurfaceHook;
+//CVMTHookManager* pClientHook;
+//CVMTHookManager* pClientModeHook;
+//CVMTHookManager* pModelRenderHook;
+//CVMTHookManager* pInputHook;
 
 tPaintTraverse oPaintTraverse;
 
@@ -42,7 +42,6 @@ CreateInterfaceFn StudioRenderFactory = NULL;
 CreateInterfaceFn InputSystemFactory = NULL;
 CreateInterfaceFn FileSysFactory = NULL;
 
-bool name = true;
 int screenWidth, screenHeight;
 
 void SpitShit();
@@ -97,59 +96,95 @@ void __fastcall hkPaintTraverse(void* ecx, void* edx, unsigned int vguiPanel, bo
 		}
 	}
 	
+	int v = 0;
+	if( MatSystemTopPanel == vguiPanel ) {
+		DrawString( 10, 10, Color::Red(), s_HFontPlayer, "Hello from PaintTraverse" );
 
-	if (MatSystemTopPanel == vguiPanel)
-	{
-		DrawString( 10, 10, Color::Red(), s_HFontPlayer, "Hello froasfm PaintTraverse" );
-		if (GetAsyncKeyState(VK_F9) & 1)
-		{
-			name = !name;
-			if (name) Beep(0x367, 200);
-			else Beep(0x255, 200);
-		}
+		if( engine->IsInGame() && engine->IsConnected() && !engine->IsTakingScreenshot() ) {
 
-		if (engine->IsInGame() && engine->IsConnected() && !engine->IsTakingScreenshot())
-		{
-
-			if (GetAsyncKeyState(VK_F11) & 1)
-			{
-				g_pCVar->ConsoleColorPrintf(Color::Red(), "Hello World!");
-			}
-
-			C_BaseEntity *pLocalEntity = (C_BaseEntity*)entitylist->GetClientEntity(engine->GetLocalPlayer());
-			if (!pLocalEntity)
+			C_BaseEntity *pLocalEntity = (C_BaseEntity*)entitylist->GetClientEntity( engine->GetLocalPlayer() );
+			if( !pLocalEntity )
 				return;
 
+			for( int i = 0; i < entitylist->GetHighestEntityIndex(); i++ ) {
+				C_BaseEntity* pBaseEntity = (C_BaseEntity*)entitylist->GetClientEntity( i );
 
-			for (int i = 0; i < entitylist->GetHighestEntityIndex(); i++)
-			{
-				C_BaseEntity* pBaseEntity = (C_BaseEntity*)entitylist->GetClientEntity(i);
-				if (!pBaseEntity)
+				v++;
+				if( !pBaseEntity )
 					continue;
 				if( pBaseEntity->health() < 1 )
 					continue;
-				if( pBaseEntity->IsDormant() )
+				if( pBaseEntity->m_bDormant )
 					continue;
-				if (pBaseEntity == pLocalEntity)
-					continue;
-				if (pLocalEntity->team() == pBaseEntity->team())
+				if( pBaseEntity == pLocalEntity )
 					continue;
 
-				if (name)
-				{
-					Vector out;
-					if (WorldToScreen(pBaseEntity->GetAbsOrigin(), out))
-					{
-						if (name)
-						{
-							//g_pCVar->ConsoleColorPrintf( Color::Purple(), (std::to_string( out.x ) + " - "+ std::to_string( out.y )).c_str() );
-							//player_info_t info;
-							//engine->GetPlayerInfo(i, &info);
+				bool bIsEnemy = pLocalEntity->team() != pBaseEntity->team();
 
-							//DrawString(out.x - 5, out.y, Color::Red(), s_HFontPlayer, info.name);
-							g_pMatSurface->DrawSetColor( Color::Purple() );
-							g_pMatSurface->DrawFilledRect(out.x, out.y, out.x + 10, out.y + 10 );
+				Vector out;
+				if( !g_pDebugOverlay->ScreenPosition( pBaseEntity->GetAbsOrigin(), out ) ) {
+					int iBoxWidth = 30;
+					int iBoxHeight = 50;
+					Vector vEntOrigin = pBaseEntity->GetAbsOrigin();
+					std::vector<Vector> v3DVertices = {
+						//------------------------------
+						// Base
+						//------------------------------
+						Vector( vEntOrigin.x - iBoxWidth / 2, vEntOrigin.y - iBoxWidth / 2, vEntOrigin.z ), //v0
+						Vector( vEntOrigin.x + iBoxWidth / 2, vEntOrigin.y - iBoxWidth / 2, vEntOrigin.z ), //v1
+						Vector( vEntOrigin.x - iBoxWidth / 2, vEntOrigin.y + iBoxWidth / 2, vEntOrigin.z ), //v2
+						Vector( vEntOrigin.x + iBoxWidth / 2, vEntOrigin.y + iBoxWidth / 2, vEntOrigin.z ), //v3
+
+						//------------------------------
+						// Top
+						//------------------------------
+						Vector( vEntOrigin.x - iBoxWidth / 2, vEntOrigin.y - iBoxWidth / 2, vEntOrigin.z + iBoxHeight ), //v4
+						Vector( vEntOrigin.x + iBoxWidth / 2, vEntOrigin.y - iBoxWidth / 2, vEntOrigin.z + iBoxHeight ), //v5
+						Vector( vEntOrigin.x - iBoxWidth / 2, vEntOrigin.y + iBoxWidth / 2, vEntOrigin.z + iBoxHeight ), //v6
+						Vector( vEntOrigin.x + iBoxWidth / 2, vEntOrigin.y + iBoxWidth / 2, vEntOrigin.z + iBoxHeight ), //v7
+					};
+					std::vector<int> vIndexes = {
+						//------------------------------
+						// Base
+						//------------------------------
+						0, 1,
+						0, 2,
+						1, 3,
+						2, 3,
+
+						//------------------------------
+						// Top
+						//------------------------------
+						4, 5,
+						4, 6,
+						5, 7,
+						6, 7,
+
+						//------------------------------
+						// Sides
+						//------------------------------
+						0, 4,
+						1, 5,
+						2, 6,
+						3, 7
+					};
+
+					std::vector<Vector> vScreenPoints;
+
+					for( auto it = v3DVertices.begin(); it < v3DVertices.end(); it++ ) {
+						Vector temp;
+						if( !g_pDebugOverlay->ScreenPosition( *it, temp ) ) {
+							vScreenPoints.push_back( temp );
 						}
+					}
+					int length = vIndexes.size();
+					for( int idx = 0; idx < length - 1; idx+=2 ) {
+						g_pMatSurface->DrawSetColor( bIsEnemy ? Color::Red() : Color::LightBlue() );
+						g_pMatSurface->DrawLine( 
+							vScreenPoints[vIndexes[idx]].x,
+							vScreenPoints[vIndexes[idx]].y,
+							vScreenPoints[vIndexes[idx+1]].x,
+							vScreenPoints[vIndexes[idx + 1]].y );
 					}
 				}
 			}
@@ -196,7 +231,6 @@ DWORD WINAPI Init(LPVOID lpArguments)
 	modelrender = (IVModelRender*)EngineFactory(VENGINE_HUDMODEL_INTERFACE_VERSION, NULL);
 	render = (IVRenderView*)EngineFactory(VENGINE_RENDERVIEW_INTERFACE_VERSION, NULL);
 	g_pDebugOverlay = (IVDebugOverlay*)EngineFactory(VDEBUG_OVERLAY_INTERFACE_VERSION, NULL);
-
 
 	g_pCVar->ConsoleColorPrintf(Color::Purple(), "-------------------------------\n"
 												 " dude719 CSGO SDK Example 2015\n"

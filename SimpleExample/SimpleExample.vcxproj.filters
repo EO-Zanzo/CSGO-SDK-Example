@@ -24,9 +24,6 @@
     <ClCompile Include="offsets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="$(SolutionDir)\CSGO-SDK\tier1\KeyValues.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="netvars.h">
